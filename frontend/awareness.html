@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Awareness</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="predict.html">Predict</a>
+    <a href="compare.html">Compare</a>
+    <a href="awareness.html">Awareness</a>
+    <a href="about.html">About</a>
+</nav>
+
+<div class="container fade-in">
+
+    <section class="section">
+        <h2>Understanding CO₂ Emissions</h2>
+        <p class="muted">
+            Why emissions matter and how informed choices can help protect the planet.
+        </p>
+
+        <div class="features">
+
+            <div class="card clickable"
+                 onclick="openModal(
+                    'Climate Impact',
+                    'Vehicle CO₂ emissions trap heat in the atmosphere, contributing to global warming, rising temperatures, and extreme climate events.'
+                 )">
+                <h3>🌍 Climate Impact</h3>
+                <p>
+                    Vehicle emissions are a major contributor to global warming.
+                </p>
+            </div>
+
+            <div class="card clickable"
+                 onclick="openModal(
+                    'Transportation Role',
+                    'The transportation sector is one of the largest sources of CO₂ emissions due to fuel combustion in vehicles.'
+                 )">
+                <h3>🚗 Transportation Role</h3>
+                <p>
+                    Fuel consumption directly influences CO₂ output and air quality.
+                </p>
+            </div>
+
+            <div class="card clickable"
+                 onclick="openModal(
+                    'Sustainable Choices',
+                    'Fuel-efficient and low-emission vehicles significantly reduce environmental impact over their operational lifetime.'
+                 )">
+                <h3>🌱 Sustainable Choices</h3>
+                <p>
+                    Selecting fuel-efficient vehicles reduces emissions over time.
+                </p>
+            </div>
+
+            <div class="card clickable"
+                 onclick="openModal(
+                    'Awareness Matters',
+                    'Awareness empowers individuals to make informed, responsible, and environmentally conscious transportation decisions.'
+                 )">
+                <h3>📘 Awareness Matters</h3>
+                <p>
+                    Understanding emissions empowers responsible decisions.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    © 2026 CO₂ Emission Prediction • Sustainability Through AI
+</footer>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <span class="modal-close" onclick="closeModal()">×</span>
+        <h3 id="modalTitle"></h3>
+        <p id="modalContent"></p>
+    </div>
+</div>
+
+<script>
+function openModal(title, content) {
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalContent").innerText = content;
+    document.getElementById("modalOverlay").style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("modalOverlay").style.display = "none";
+}
+
+// Close modal when clicking outside
+document.getElementById("modalOverlay").addEventListener("click", function (e) {
+    if (e.target === this) closeModal();
+});
+</script>
+
+</body>
+</html>

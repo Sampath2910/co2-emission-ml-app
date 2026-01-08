@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: co2-emission-app
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m backend.app
+    autoDeploy: true

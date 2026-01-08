@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="predict.html">Predict</a>
+    <a href="compare.html">Compare</a>
+    <a href="awareness.html">Awareness</a>
+    <a href="about.html">About</a>
+</nav>
+
+<div class="container fade-in">
+
+    <section class="section">
+        <h2>About This Platform</h2>
+        <p class="muted">
+            An AI-powered system designed to analyze vehicle emissions and support
+            sustainable transportation decisions.
+        </p>
+
+        <div class="features">
+
+            <div class="card clickable"
+                 onclick="openModal(
+                    'Why It Matters',
+                    'Transportation emissions are a major environmental challenge, and intelligent systems can help reduce their impact through data-driven insights.'
+                 )">
+                <h3>Why It Matters</h3>
+                <p>
+                    Transportation emissions are one of the largest contributors
+                    to global environmental challenges.
+                </p>
+            </div>
+
+            <div class="card clickable"
+                 onclick="openModal(
+                    'Data & Intelligence',
+                    'The platform uses real-world vehicle emission data combined with advanced XGBoost machine learning models for accurate predictions.'
+                 )">
+                <h3>Data & Intelligence</h3>
+                <p>
+                    Built using real-world vehicle emission data and advanced
+                    XGBoost machine learning models.
+                </p>
+            </div>
+
+            <div class="card clickable"
+                 onclick="openModal(
+                    'How It Works',
+                    'Users enter vehicle details, which are processed by a machine learning model to generate real-time CO₂ emission insights.'
+                 )">
+                <h3>How It Works</h3>
+                <p>
+                    User input → intelligent ML analysis → actionable
+                    CO₂ emission insights.
+                </p>
+            </div>
+
+            <div class="card clickable"
+                 onclick="openModal(
+                    'Future Vision',
+                    'The platform is designed to scale globally, integrate multiple datasets, and support emerging vehicle technologies.'
+                 )">
+                <h3>Future Vision</h3>
+                <p>
+                    Designed to scale across regions, vehicle types,
+                    and modern deployment platforms.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    © 2026 CO₂ Emission Prediction • Sustainability Through AI
+</footer>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <span class="modal-close" onclick="closeModal()">×</span>
+        <h3 id="modalTitle"></h3>
+        <p id="modalContent"></p>
+    </div>
+</div>
+
+<script>
+function openModal(title, content) {
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalContent").innerText = content;
+    document.getElementById("modalOverlay").style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("modalOverlay").style.display = "none";
+}
+
+// Close modal when clicking outside
+document.getElementById("modalOverlay").addEventListener("click", function (e) {
+    if (e.target === this) closeModal();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,252 @@
+/* ===== Global Reset ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== Theme Variables ===== */
+:root {
+    --primary: #2e7d32;
+    --primary-dark: #1b5e20;
+    --background: #eef5f0;
+    --card-bg: #ffffff;
+    --accent: #f1f8e9;
+    --text-main: #333;
+    --text-muted: #666;
+}
+
+/* ===== Base Styles ===== */
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+/* ===== Navbar ===== */
+.navbar {
+    background: var(--primary);
+    padding: 14px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar a {
+    color: #fff;
+    margin: 0 16px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14.5px;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+/* ===== Containers ===== */
+.container {
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    margin-bottom: 30px;
+}
+
+/* ===== Headings ===== */
+h1, h2, h3 {
+    color: var(--primary);
+}
+
+h1 {
+    font-size: 38px;
+}
+
+h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+/* ===== Text ===== */
+p {
+    color: var(--text-main);
+    font-size: 15px;
+}
+
+.muted {
+    color: var(--text-muted);
+}
+
+/* ===== Forms ===== */
+label {
+    display: block;
+    margin-top: 14px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* ===== Buttons ===== */
+button {
+    margin-top: 25px;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* ===== Result Box ===== */
+.result {
+    margin-top: 25px;
+    padding: 20px;
+    background: var(--accent);
+    border-left: 5px solid var(--primary);
+    border-radius: 6px;
+    display: none;
+}
+
+/* ===== Error ===== */
+.error {
+    margin-top: 12px;
+    color: #c62828;
+    font-size: 14px;
+    display: none;
+}
+
+/* ===== Footer ===== */
+footer {
+    background: var(--primary-dark);
+    color: white;
+    text-align: center;
+    padding: 16px;
+    font-size: 13px;
+    margin-top: 60px;
+}
+
+/* ===== Animation ===== */
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 30px;
+    }
+
+    .navbar a {
+        display: inline-block;
+        margin: 8px;
+    }
+}
+
+/* ===== Modal Popup ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: #ffffff;
+    max-width: 520px;
+    width: 90%;
+    padding: 28px;
+    border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    animation: modalFade 0.3s ease;
+}
+
+@keyframes modalFade {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal h3 {
+    margin-top: 0;
+    color: #2e7d32;
+}
+
+.modal p {
+    margin-top: 10px;
+    line-height: 1.6;
+    color: #444;
+}
+
+.modal-close {
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+}
+
+.modal-close:hover {
+    color: #000;
+}
+
+/* Make cards clickable */
+.card.clickable {
+    cursor: pointer;
+}
+

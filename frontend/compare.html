@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vehicle Comparison</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="predict.html">Predict</a>
+    <a href="compare.html">Compare</a>
+    <a href="awareness.html">Awareness</a>
+    <a href="about.html">About</a>
+</nav>
+
+<div class="container fade-in">
+
+    <section class="section">
+        <h2>Compare Vehicle CO₂ Emissions</h2>
+        <p class="muted">
+            Enter specifications for two vehicles to identify the more eco-friendly option.
+        </p>
+
+        <div class="features">
+
+            <!-- Vehicle A -->
+            <div class="card">
+                <h3>Vehicle A</h3>
+
+                <label>Engine Size (Litres)</label>
+                <input type="number" id="engineA" step="0.1" placeholder="e.g. 2.0">
+
+                <label>Number of Cylinders</label>
+                <input type="number" id="cylindersA" placeholder="e.g. 4">
+
+                <label>Fuel Consumption (L / 100 km)</label>
+                <input type="number" id="fuelA" step="0.1" placeholder="e.g. 8.5">
+
+                <label>Fuel Type</label>
+                <select id="fuelTypeA">
+                    <option value="X">Petrol</option>
+                    <option value="Z">Diesel</option>
+                    <option value="E">Ethanol</option>
+                    <option value="N">Natural Gas</option>
+                </select>
+            </div>
+
+            <!-- Vehicle B -->
+            <div class="card">
+                <h3>Vehicle B</h3>
+
+                <label>Engine Size (Litres)</label>
+                <input type="number" id="engineB" step="0.1" placeholder="e.g. 1.8">
+
+                <label>Number of Cylinders</label>
+                <input type="number" id="cylindersB" placeholder="e.g. 4">
+
+                <label>Fuel Consumption (L / 100 km)</label>
+                <input type="number" id="fuelB" step="0.1" placeholder="e.g. 6.5">
+
+                <label>Fuel Type</label>
+                <select id="fuelTypeB">
+                    <option value="X">Petrol</option>
+                    <option value="Z">Diesel</option>
+                    <option value="E">Ethanol</option>
+                    <option value="N">Natural Gas</option>
+                </select>
+            </div>
+
+            <!-- Result -->
+            <div class="card result" id="resultBox">
+                <h3>Comparison Result</h3>
+                <p id="comparisonText"></p>
+            </div>
+
+        </div>
+
+        <button onclick="compareVehicles()">Compare Vehicles</button>
+        <div class="error" id="errorMsg"></div>
+    </section>
+
+</div>
+
+<footer>
+    © 2026 CO₂ Emission Prediction • Sustainability Through AI
+</footer>
+
+<script>
+async function compareVehicles() {
+
+    hideMessages();
+
+    const vA = getVehicle("A");
+    const vB = getVehicle("B");
+
+    if (!vA || !vB) return;
+
+    try {
+        const co2A = await predict(vA);
+        const co2B = await predict(vB);
+
+        let text = "";
+        if (co2A < co2B) {
+            text = "✅ Vehicle A is more eco-friendly than Vehicle B.";
+        } else if (co2A > co2B) {
+            text = "⚠ Vehicle B is more eco-friendly than Vehicle A.";
+        } else {
+            text = "ℹ Both vehicles have similar emission levels.";
+        }
+
+        text += " Emission difference: " + Math.abs(co2A - co2B).toFixed(2) + " g/km";
+
+        document.getElementById("comparisonText").innerText = text;
+        document.getElementById("resultBox").style.display = "block";
+
+    } catch {
+        showError("Unable to connect to backend. Please ensure the server is running.");
+    }
+}
+
+function getVehicle(label) {
+    const engine = parseFloat(document.getElementById("engine" + label).value);
+    const cyl = parseInt(document.getElementById("cylinders" + label).value);
+    const fuel = parseFloat(document.getElementById("fuel" + label).value);
+    const type = document.getElementById("fuelType" + label).value;
+
+    if (isNaN(engine) || engine <= 0 ||
+        isNaN(cyl) || cyl <= 0 ||
+        isNaN(fuel) || fuel <= 0) {
+        showError("Please enter valid values for both vehicles.");
+        return null;
+    }
+
+    return {
+        "Engine Size(L)": engine,
+        "Cylinders": cyl,
+        "Fuel Consumption Comb (L/100 km)": fuel,
+        "Fuel Type": type
+    };
+}
+
+async function predict(data) {
+    const response = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+    const result = await response.json();
+    return parseFloat(result.predicted_co2_gkm);
+}
+
+function showError(msg) {
+    const box = document.getElementById("errorMsg");
+    box.innerText = msg;
+    box.style.display = "block";
+}
+
+function hideMessages() {
+    document.getElementById("errorMsg").style.display = "none";
+    document.getElementById("resultBox").style.display = "none";
+}
+</script>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <span class="modal-close" onclick="closeModal()">×</span>
+        <h3 id="modalTitle"></h3>
+        <p id="modalContent"></p>
+    </div>
+</div>
+
+<script>
+function openModal(title, content) {
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalContent").innerText = content;
+    document.getElementById("modalOverlay").style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("modalOverlay").style.display = "none";
+}
+
+// Close when clicking outside modal
+document.getElementById("modalOverlay").addEventListener("click", function(e) {
+    if (e.target === this) closeModal();
+});
+</script>
+
+</body>
+</html>
