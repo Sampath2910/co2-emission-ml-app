@@ -54,7 +54,7 @@
             </div>
 
             <!-- Result Card -->
-            <div class="card result" id="resultBox">
+            <div class="card result" id="resultBox" style="display:none;">
                 <h3>Prediction Result</h3>
                 <p><strong>CO₂ Emission:</strong> <span id="co2Value"></span> g/km</p>
                 <p><strong>Category:</strong> <span id="rating"></span></p>
@@ -73,8 +73,11 @@
 <script>
 function predictCO2() {
 
-    document.getElementById("errorMsg").style.display = "none";
-    document.getElementById("resultBox").style.display = "none";
+    const errorBox = document.getElementById("errorMsg");
+    const resultBox = document.getElementById("resultBox");
+
+    errorBox.style.display = "none";
+    resultBox.style.display = "none";
 
     const engineSize = parseFloat(document.getElementById("engineSize").value);
     const cylinders = parseInt(document.getElementById("cylinders").value);
@@ -101,25 +104,26 @@ function predictCO2() {
         "Fuel Type": fuelType
     };
 
-    fetch("http://127.0.0.1:5000/predict", {
+    fetch("/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(result => {
-        if (result.error) {
-            showError(result.error);
-            return;
+    .then(async response => {
+        const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.error || "Prediction failed");
         }
-
-        document.getElementById("resultBox").style.display = "block";
+        return result;
+    })
+    .then(result => {
+        resultBox.style.display = "block";
         document.getElementById("co2Value").innerText = result.predicted_co2_gkm;
         document.getElementById("rating").innerText = result.rating;
         document.getElementById("alert").innerText = result.alert;
     })
-    .catch(() => {
-        showError("Unable to connect to backend. Please ensure the server is running.");
+    .catch(error => {
+        showError(error.message);
     });
 }
 
@@ -129,33 +133,6 @@ function showError(message) {
     errorBox.style.display = "block";
 }
 </script>
-
-<!-- Modal -->
-<div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-        <span class="modal-close" onclick="closeModal()">×</span>
-        <h3 id="modalTitle"></h3>
-        <p id="modalContent"></p>
-    </div>
-</div>
-
-<script>
-function openModal(title, content) {
-    document.getElementById("modalTitle").innerText = title;
-    document.getElementById("modalContent").innerText = content;
-    document.getElementById("modalOverlay").style.display = "flex";
-}
-
-function closeModal() {
-    document.getElementById("modalOverlay").style.display = "none";
-}
-
-// Close when clicking outside modal
-document.getElementById("modalOverlay").addEventListener("click", function(e) {
-    if (e.target === this) closeModal();
-});
-</script>
-
 
 </body>
 </html>
