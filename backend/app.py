@@ -3,6 +3,8 @@ from flask_cors import CORS
 import os
 import joblib
 import numpy as np
+import pandas as pd
+
 
 # =========================
 # Flask Configuration
@@ -54,13 +56,14 @@ def serve_static(filename):
 # =========================
 # Prediction API
 # =========================
-
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        data = request.json
+        data = request.get_json()
 
-        # Build feature dict
+        if not data:
+            return jsonify({"error": "No JSON received"}), 400
+
         input_data = {
             "Engine Size(L)": float(data["Engine Size(L)"]),
             "Cylinders": int(data["Cylinders"]),
@@ -69,24 +72,31 @@ def predict():
 
         fuel_type = data["Fuel Type"]
 
-        # One-hot encoding (same as training)
-        for ft in ["Fuel Type_E", "Fuel Type_N", "Fuel Type_X", "Fuel Type_Z"]:
-            input_data[ft] = 0
+        # Initialize all fuel columns to 0
+        for col in feature_columns:
+            if col.startswith("Fuel Type_"):
+                input_data[col] = 0
 
-        input_data[f"Fuel Type_{fuel_type}"] = 1
+        fuel_col = f"Fuel Type_{fuel_type}"
+        if fuel_col not in input_data:
+            return jsonify({
+                "error": f"Invalid Fuel Type: {fuel_type}",
+                "expected": [c for c in feature_columns if c.startswith("Fuel Type_")]
+            }), 400
 
-        # Convert to ordered array
-        feature_vector = np.array(
-            [input_data[col] for col in feature_columns]
-        ).reshape(1, -1)
+        input_data[fuel_col] = 1
+
+
+        # Convert input to DataFrame with correct feature order
+        input_df = pd.DataFrame([input_data], columns=feature_columns)
 
         # Scale input
-        feature_vector = scaler.transform(feature_vector)
+        scaled_input = scaler.transform(input_df)
 
         # Predict
-        prediction = float(model.predict(feature_vector)[0])
+        prediction = float(model.predict(scaled_input)[0])
 
-        # Emission classification
+
         if prediction < 120:
             rating = "Low Emission"
             alert = "✅ Eco-friendly"
@@ -104,6 +114,7 @@ def predict():
         })
 
     except Exception as e:
+        print("❌ Prediction error:", str(e))
         return jsonify({"error": str(e)}), 400
 
 # =========================
