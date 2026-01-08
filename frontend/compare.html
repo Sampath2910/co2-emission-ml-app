@@ -73,7 +73,7 @@
             </div>
 
             <!-- Result -->
-            <div class="card result" id="resultBox">
+            <div class="card result" id="resultBox" style="display:none;">
                 <h3>Comparison Result</h3>
                 <p id="comparisonText"></p>
             </div>
@@ -118,8 +118,8 @@ async function compareVehicles() {
         document.getElementById("comparisonText").innerText = text;
         document.getElementById("resultBox").style.display = "block";
 
-    } catch {
-        showError("Unable to connect to backend. Please ensure the server is running.");
+    } catch (error) {
+        showError(error.message);
     }
 }
 
@@ -145,12 +145,18 @@ function getVehicle(label) {
 }
 
 async function predict(data) {
-    const response = await fetch("http://127.0.0.1:5000/predict", {
+    const response = await fetch("/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
     });
+
     const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.error || "Prediction failed");
+    }
+
     return parseFloat(result.predicted_co2_gkm);
 }
 
@@ -164,32 +170,6 @@ function hideMessages() {
     document.getElementById("errorMsg").style.display = "none";
     document.getElementById("resultBox").style.display = "none";
 }
-</script>
-
-<!-- Modal -->
-<div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-        <span class="modal-close" onclick="closeModal()">×</span>
-        <h3 id="modalTitle"></h3>
-        <p id="modalContent"></p>
-    </div>
-</div>
-
-<script>
-function openModal(title, content) {
-    document.getElementById("modalTitle").innerText = title;
-    document.getElementById("modalContent").innerText = content;
-    document.getElementById("modalOverlay").style.display = "flex";
-}
-
-function closeModal() {
-    document.getElementById("modalOverlay").style.display = "none";
-}
-
-// Close when clicking outside modal
-document.getElementById("modalOverlay").addEventListener("click", function(e) {
-    if (e.target === this) closeModal();
-});
 </script>
 
 </body>
